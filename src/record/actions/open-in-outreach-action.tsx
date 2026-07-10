@@ -33,12 +33,12 @@ export const personOpenInOutreachAction: App.Record.Action = {
                 title: "Loading prospect...",
                 text: "",
             })
+            // No catch: Outreach API errors arrive as an errored result, so a rejection here
+            // can only be an SDK-level error (e.g. missing connection) that must propagate
+            // for Attio to handle — typically by prompting the user to connect.
             let prospectResult: Awaited<ReturnType<typeof getProspectId>>
             try {
                 prospectResult = await getProspectId(person.email_addresses)
-            } catch (error) {
-                console.error(error)
-                prospectResult = errored(unexpectedOutreachError())
             } finally {
                 await hideToast()
             }
