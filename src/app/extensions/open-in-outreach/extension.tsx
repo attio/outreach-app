@@ -1,15 +1,15 @@
 import {errored, isErrored} from "@attio/fetchable"
-import type {App} from "attio"
-import {alert, runQuery, showDialog, showToast} from "attio/client"
-import {CreateProspectDialog} from "../../components/create-prospect-dialog"
-import type {AttioPerson} from "../../graphql/attio-person"
-import GetPersonById from "../../graphql/get-person-by-id.graphql"
-import findOrCreateProspect from "../../outreach/prospects/find-or-create-prospect.server"
-import getProspectId from "../../outreach/prospects/get-prospect-id.server"
-import {outreachApiErrorUserMessage, unexpectedOutreachError} from "../../outreach/types"
-import {getOutreachProspectUrl} from "../../outreach/utils"
+import {alert, runQuery, showDialog, showToast, Extensions} from "attio/client"
+import {CreateProspectDialog} from "../../../components/create-prospect-dialog"
+import type {AttioPerson} from "../../../graphql/attio-person"
+import GetPersonById from "../../../graphql/get-person-by-id.graphql"
+import findOrCreateProspect from "../../../outreach/prospects/find-or-create-prospect.server"
+import getProspectId from "../../../outreach/prospects/get-prospect-id.server"
+import {outreachApiErrorUserMessage, unexpectedOutreachError} from "../../../outreach/types"
+import {getOutreachProspectUrl} from "../../../outreach/utils"
 
-export const personOpenInOutreachAction: App.Record.Action = {
+export default Extensions.defineExtension({
+    type: "record-action",
     id: "open-in-outreach",
     label: "Open in Outreach",
     objects: ["people"],
@@ -87,7 +87,7 @@ export const personOpenInOutreachAction: App.Record.Action = {
             }
         }
     },
-}
+})
 
 async function loadPerson(recordId: string): Promise<AttioPerson | null> {
     const {hideToast} = await showToast({

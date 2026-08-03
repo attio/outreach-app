@@ -1,9 +1,9 @@
 import {isErrored} from "@attio/fetchable"
-import {experimental_Workflow, useAsyncCache} from "attio/client"
+import {Workflows, useAsyncCache} from "attio/client"
 import Fuse from "fuse.js"
 import {useMemo} from "react"
-import getMailboxes from "../../outreach/mailboxes/get-mailboxes.server"
-import getSequences from "../../outreach/sequences/get-sequences.server"
+import getMailboxes from "../../../outreach/mailboxes/get-mailboxes.server"
+import getSequences from "../../../outreach/sequences/get-sequences.server"
 import block from "./block"
 
 const fuseSearchOptions = {
@@ -26,9 +26,10 @@ function searchItems<T>(items: T[] | null, search: Fuse<T> | null, query: string
         : (search?.search(normalizedQuery).map(({item}) => item) ?? [])
 }
 
-export default experimental_Workflow.defineConfigurator(block, (workflowBlock) => {
-    const {ComboboxInput, EmailAddressInput, TextInput, Outcome} =
-        experimental_Workflow.useConfigurator(workflowBlock.schema)
+export default Workflows.defineConfigurator(block, (workflowBlock) => {
+    const {ComboboxInput, EmailAddressInput, TextInput, Outcome} = Workflows.useConfigurator(
+        workflowBlock.configSchema
+    )
     const {values} = useAsyncCache({
         sequences: getSequences,
         mailboxes: getMailboxes,
@@ -161,10 +162,10 @@ export default experimental_Workflow.defineConfigurator(block, (workflowBlock) =
             <TextInput name="workPhone" label="Work phone" placeholder="Enter work phone..." />
 
             <Outcome
-                slug="success"
+                id="success"
                 label="Success"
-                schema={experimental_Workflow.Outcome.struct({
-                    prospectId: experimental_Workflow.Outcome.string(),
+                schema={Workflows.OutcomeSchema.struct({
+                    prospectId: Workflows.OutcomeSchema.string(),
                 })}
             />
         </>

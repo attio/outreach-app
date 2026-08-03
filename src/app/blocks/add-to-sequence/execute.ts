@@ -1,11 +1,11 @@
 import {isErrored} from "@attio/fetchable"
-import {experimental_Workflow} from "attio/server"
-import {addProspectToSequence} from "../../outreach/prospects/add-prospect-to-sequence"
-import type {ProspectAttributes} from "../../outreach/types"
-import {outreachApiErrorUserMessage} from "../../outreach/types"
+import {Workflows} from "attio/server"
+import {addProspectToSequence} from "../../../outreach/prospects/add-prospect-to-sequence"
+import type {ProspectAttributes} from "../../../outreach/types"
+import {outreachApiErrorUserMessage} from "../../../outreach/types"
 import block from "./block"
 
-export default experimental_Workflow.defineWorkflowBlockExecute(block, async (config) => {
+export default Workflows.defineWorkflowBlockExecute(block, async ({config}) => {
     const {sequenceId, mailboxId, email} = config
     type ProspectAttributesPayload = Partial<Omit<ProspectAttributes, "emails">>
 
@@ -59,7 +59,7 @@ export default experimental_Workflow.defineWorkflowBlockExecute(block, async (co
         }
     }
 
-    return {type: "outcome", slug: "success", data: {prospectId: result.value.id}}
+    return {type: "outcome", id: "success", data: {prospectId: result.value.id}}
 })
 
 function compactAttributes(

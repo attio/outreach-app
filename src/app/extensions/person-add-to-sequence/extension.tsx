@@ -1,16 +1,16 @@
 import {errored, isErrored} from "@attio/fetchable"
-import type {App} from "attio"
-import {alert, runQuery, showDialog, showToast} from "attio/client"
+import {alert, runQuery, showDialog, showToast, Extensions} from "attio/client"
 import React from "react"
-import {AddToSequenceDialog} from "../../components/add-to-sequence-dialog"
-import {Loading} from "../../components/loading"
-import type {AttioPerson} from "../../graphql/attio-person"
-import GetPersonById from "../../graphql/get-person-by-id.graphql"
-import addToSequence from "../../outreach/sequences/add-to-sequence.server"
-import {outreachApiErrorUserMessage, unexpectedOutreachError} from "../../outreach/types"
-import {QueryClientProvider, queryClient} from "../../react-query"
+import {AddToSequenceDialog} from "../../../components/add-to-sequence-dialog"
+import {Loading} from "../../../components/loading"
+import type {AttioPerson} from "../../../graphql/attio-person"
+import GetPersonById from "../../../graphql/get-person-by-id.graphql"
+import addToSequence from "../../../outreach/sequences/add-to-sequence.server"
+import {outreachApiErrorUserMessage, unexpectedOutreachError} from "../../../outreach/types"
+import {QueryClientProvider, queryClient} from "../../../react-query"
 
-export const personAddToSequenceAction: App.Record.Action = {
+export default Extensions.defineExtension({
+    type: "record-action",
     id: "person-add-to-sequence",
     label: "Add to Outreach sequence",
     objects: ["people"],
@@ -77,7 +77,7 @@ export const personAddToSequenceAction: App.Record.Action = {
             })
         }
     },
-}
+})
 
 async function loadPerson(recordId: string): Promise<AttioPerson | null> {
     const {hideToast} = await showToast({

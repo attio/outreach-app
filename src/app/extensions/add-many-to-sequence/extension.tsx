@@ -1,19 +1,19 @@
 import {isErrored} from "@attio/fetchable"
-import type {App} from "attio"
 import type {RecordBatch} from "attio/client"
-import {alert, runQuery, showDialog, showToast} from "attio/client"
+import {alert, runQuery, showDialog, showToast, Extensions} from "attio/client"
 import React from "react"
-import {AddToSequenceDialog} from "../../components/add-to-sequence-dialog"
-import {Loading} from "../../components/loading"
-import type {AttioPerson} from "../../graphql/attio-person"
-import GetPersonById from "../../graphql/get-person-by-id.graphql"
-import addManyToSequence from "../../outreach/sequences/add-many-to-sequence.server"
-import {outreachApiErrorUserMessage, unexpectedOutreachError} from "../../outreach/types"
-import {QueryClientProvider, queryClient} from "../../react-query"
+import {AddToSequenceDialog} from "../../../components/add-to-sequence-dialog"
+import {Loading} from "../../../components/loading"
+import type {AttioPerson} from "../../../graphql/attio-person"
+import GetPersonById from "../../../graphql/get-person-by-id.graphql"
+import addManyToSequence from "../../../outreach/sequences/add-many-to-sequence.server"
+import {outreachApiErrorUserMessage, unexpectedOutreachError} from "../../../outreach/types"
+import {QueryClientProvider, queryClient} from "../../../react-query"
 
 const PEOPLE_CHUNK_SIZE = 100
 
-export const peopleBulkAddToSequenceAction: App.Record.BulkAction = {
+export default Extensions.defineExtension({
+    type: "bulk-record-action",
     id: "add-many-to-sequence",
     label: "Add to Outreach sequence",
     objects: ["people"],
@@ -145,7 +145,7 @@ export const peopleBulkAddToSequenceAction: App.Record.BulkAction = {
             })
         }
     },
-}
+})
 
 async function peopleFromRecordIds(recordIds: string[]): Promise<AttioPerson[]> {
     const results = await Promise.all(

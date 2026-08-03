@@ -1,22 +1,20 @@
 import {isErrored} from "@attio/fetchable"
-import {experimental_Workflow, useAsyncCache} from "attio/client"
-import getSequences from "../../outreach/sequences/get-sequences.server"
+import {Workflows, useAsyncCache} from "attio/client"
+import getSequences from "../../../outreach/sequences/get-sequences.server"
 import block from "./block"
 
-const sequenceStateChangedOutcomeSchema = experimental_Workflow.Outcome.struct({
-    triggered_at: experimental_Workflow.Outcome.timestamp(),
-    sequence_id: experimental_Workflow.Outcome.string(),
-    sequence_step: experimental_Workflow.Outcome.string(),
-    sequence_step_name: experimental_Workflow.Outcome.string(),
-    prospect_id: experimental_Workflow.Outcome.string(),
-    prospect_name: experimental_Workflow.Outcome.string(),
-    prospect_emails: experimental_Workflow.Outcome.array(
-        experimental_Workflow.Outcome.emailAddress()
-    ),
+const sequenceStateChangedOutcomeSchema = Workflows.OutcomeSchema.struct({
+    triggered_at: Workflows.OutcomeSchema.timestamp(),
+    sequence_id: Workflows.OutcomeSchema.string(),
+    sequence_step: Workflows.OutcomeSchema.string(),
+    sequence_step_name: Workflows.OutcomeSchema.string(),
+    prospect_id: Workflows.OutcomeSchema.string(),
+    prospect_name: Workflows.OutcomeSchema.string(),
+    prospect_emails: Workflows.OutcomeSchema.array(Workflows.OutcomeSchema.emailAddress()),
 })
 
-export default experimental_Workflow.defineConfigurator(block, (workflowBlock) => {
-    const {ComboboxInput, Outcome} = experimental_Workflow.useConfigurator(workflowBlock.schema)
+export default Workflows.defineConfigurator(block, (workflowBlock) => {
+    const {ComboboxInput, Outcome} = Workflows.useConfigurator(workflowBlock.configSchema)
     const {values} = useAsyncCache({
         sequences: getSequences,
     })
@@ -55,7 +53,7 @@ export default experimental_Workflow.defineConfigurator(block, (workflowBlock) =
                 }}
                 disableVariables
             />
-            <Outcome slug="done" schema={sequenceStateChangedOutcomeSchema} />
+            <Outcome id="done" schema={sequenceStateChangedOutcomeSchema} />
         </>
     )
 })
